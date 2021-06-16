@@ -23,6 +23,6 @@ class Application(tk.Frame):
 root = tk.Tk()
 root.geometry("800x600")
 root.maxsize(1000, 800)
-root.title("sandboooooox")
+root.title("sandbooooooox")
 app = Application(master=root)
 app.mainloop()
