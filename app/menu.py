@@ -1,7 +1,10 @@
 import tkinter as tk
 from tkinter import messagebox
 
-from .createLnkDialog import MyDialog
+from .createLnkDialog import ChromeDialog
+from .userDialog import UserDialog
+from util import LocalConfig
+
 def Menu(root):
     #　创建一个菜单栏，这里我们可以把它理解成一个容器，在窗口的上方
     menubar = tk.Menu(root)
@@ -17,7 +20,7 @@ def Menu(root):
     # 分隔线
     coinlistmenu.add_separator()
     coinlistmenu.add_command(label='导入', command=do_job)
-    coinlistmenu.add_command(label='导出', command=do_job)
+    # coinlistmenu.add_command(label='导出', command=do_job)
 
     # 创建编辑菜单
     privatemenu = tk.Menu(menubar, tearoff=0)
@@ -44,7 +47,7 @@ def do_job():
     print("menu job")
 
 def createLnk(root):
-    inputDialog = MyDialog()
+    inputDialog = ChromeDialog()
     root.wait_window(inputDialog) # 这一句很重要！！！
     # TODO 提交并保存
     print(inputDialog.info)
@@ -52,6 +55,7 @@ def createLnk(root):
 
 
 def aboutTeam(root):
+    print(LocalConfig().config.sections())
     msg = '''  心之所向,身之所往
 
     coinlist账号

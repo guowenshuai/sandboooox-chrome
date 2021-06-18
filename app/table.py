@@ -1,9 +1,10 @@
 import tkinter as tk
 from util import googleAuth
+from .createLnkDialog import ChromeDialog
    
-def makeTableCell(root, line, row, dog):
+def makeTableCell(wd, root, line, row, dog):
     # email
-    email_label = copiedLabel(root, line['email'])
+    email_label = copiedLabel(root, line['email'], weight=2.5)
     email_label.grid(row=row, column=0, padx=5, pady=3, ipadx=1, ipady=1)
     # pass1
     pass1_label = copiedLabel(root, text=line['pass1'])
@@ -22,9 +23,11 @@ def makeTableCell(root, line, row, dog):
     # 打开浏览器
     tk.Button(root, text="浏览器", command=lambda: openChrome(line)).grid(row=row, column=5, padx=5, pady=3, ipadx=1, ipady=1)
     tk.Button(root, text="复制", command=lambda: copyLine(line)).grid(row=row, column=6, padx=5, pady=3, ipadx=1, ipady=1)
+    tk.Button(root, text="编辑", command=lambda: editLine(wd, line)).grid(row=row, column=7, padx=5, pady=3, ipadx=1, ipady=1)
 
-def copiedLabel(root, text):
-    ent = tk.Entry(root, state='readonly', readonlybackground='white', fg='black')
+def copiedLabel(root, text, weight=1):
+    width = 10
+    ent = tk.Entry(root, state='readonly', readonlybackground='white', fg='black', width=int(width*weight))
     txt = tk.StringVar()
     txt.set(text)
     ent.config(textvariable=txt, relief='flat')
@@ -49,3 +52,10 @@ def openChrome(line):
     cmd = "google-chrome --user-data-dir=%s --proxy-server=socks://%s:%s %s https://mail.google.com/ https://coinlist.co/ &" % (user_data, line["server"], line["port"], line["email"])
     print(cmd)
     subprocess.Popen(cmd, cwd=line["user_data_dir"], shell=True,)
+
+def editLine(root, line):
+    inputDialog = ChromeDialog(line=line)
+    root.wait_window(inputDialog) # 这一句很重要！！！
+    # TODO 提交并保存
+    print(inputDialog.info)
+    return inputDialog.info

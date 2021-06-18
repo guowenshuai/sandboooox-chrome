@@ -220,13 +220,13 @@ data = [
 
 class Application(tk.Frame):
     googleAuth_watch_dog = GoogleAuthWatchDog()
-
     def __init__(self, master=None):
         super().__init__(master)
         self.master = master
         self.pack()
         Menu(master)
         self.create_widgets()
+        Application.googleAuth_watch_dog.start()
 
     def create_widgets(self):
         # 表格
@@ -249,16 +249,10 @@ class Application(tk.Frame):
         canvas.configure(xscrollcommand=hsb.set)
 
         tableFrame = tk.Frame(canvas, bg="#F8F8FF")
-        # tableFrame.grid_columnconfigure(0, weight=100)
-        # tableFrame.grid_columnconfigure(1, weight=2)
-        # tableFrame.grid_columnconfigure(2, weight=2)
-        # tableFrame.grid_columnconfigure(3, weight=4)
-        # tableFrame.grid_columnconfigure(4, weight=4)
-        # tableFrame.grid_columnconfigure(5, weight=2)
         canvas.create_window((0, 0), window=tableFrame, anchor='nw')
 
         for i in range(len(data)):
-            makeTableCell(tableFrame, data[i], i, Application.googleAuth_watch_dog)
+            makeTableCell(self.master, tableFrame, data[i], i, Application.googleAuth_watch_dog)
         tableFrame.update_idletasks()
 
         canvas.config(scrollregion=canvas.bbox("all"))
