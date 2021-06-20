@@ -29,22 +29,22 @@ class ChromeDialog(tk.Toplevel):
         # 第一行（两列）
         row1 = tk.Frame(self)
         row1.pack(fill="x")
-        tk.Label(row1, text='email:', width=10).pack(side=tk.LEFT)
+        tk.Label(row1, text='email:', width=10, anchor="w").pack(side=tk.LEFT)
         tk.Entry(row1, textvariable=self.email, width=30).pack(side=tk.LEFT)
         # 第二行
         row2 = tk.Frame(self)
         row2.pack(fill="x", ipadx=1, ipady=1)
-        tk.Label(row2, text='邮箱密码:', width=10).pack(side=tk.LEFT)
+        tk.Label(row2, text='邮箱密码:', width=10, anchor="w").pack(side=tk.LEFT)
         tk.Entry(row2, textvariable=self.pass1, width=30).pack(side=tk.LEFT)
         # 第三行
         row3 = tk.Frame(self)
         row3.pack(fill="x", ipadx=1, ipady=1)
-        tk.Label(row3, text='coinlist密码:', width=10).pack(side=tk.LEFT)
+        tk.Label(row3, text='coinlist密码:', width=10, anchor="w").pack(side=tk.LEFT)
         tk.Entry(row3, textvariable=self.pass2, width=30).pack(side=tk.LEFT)
 
         rowarea = tk.Frame(self)
         rowarea.pack(fill="x", ipadx=1, ipady=1)
-        tk.Label(rowarea, text='注册区域:', width=10).pack(side=tk.LEFT)
+        tk.Label(rowarea, text='注册区域:', width=10, anchor="w").pack(side=tk.LEFT)
         tk.Entry(rowarea, textvariable=self.area, width=30).pack(side=tk.LEFT)
         # 第四行
         row4 = tk.Frame(self)
@@ -52,7 +52,7 @@ class ChromeDialog(tk.Toplevel):
         server_top = tk.Frame(row4)
         server_top.pack(fill="x",  ipadx=1, ipady=1)
        
-        tk.Label(server_top, text='服务器:', width=10).pack(side=tk.LEFT)
+        tk.Label(server_top, text='服务器:', width=10, anchor="w").pack(side=tk.LEFT)
         tk.Entry(server_top, textvariable=self.server, width=15).pack(side=tk.LEFT)
         tk.Label(server_top, text='端口:', width=6).pack(side=tk.LEFT)
         tk.Entry(server_top, textvariable=self.port, width=8).pack(side=tk.LEFT)
@@ -61,7 +61,7 @@ class ChromeDialog(tk.Toplevel):
         # 第五行
         row5 = tk.Frame(self)
         row5.pack(fill="x", ipadx=1, ipady=1)
-        tk.Label(row5, text='谷歌秘钥:', width=10).pack(side=tk.LEFT)
+        tk.Label(row5, text='谷歌秘钥:', width=10, anchor="w").pack(side=tk.LEFT)
         tk.Entry(row5, textvariable=self.code, width=30).pack(side=tk.LEFT)
 
 

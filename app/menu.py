@@ -25,7 +25,7 @@ def Menu(root):
     # 创建编辑菜单
     privatemenu = tk.Menu(menubar, tearoff=0)
     menubar.add_cascade(label='我的', menu=privatemenu)
-    privatemenu.add_command(label='信息', command=do_job)
+    privatemenu.add_command(label='信息', command=lambda: showUserDialog(root))
     privatemenu.add_separator()
     privatemenu.add_command(label='设置', command=do_job)
     
@@ -80,3 +80,7 @@ def aboutTeam(root):
     全方位的服务
     '''
     tk.messagebox.showinfo("关于团队", msg)
+
+def showUserDialog(root):
+    userDialog = UserDialog(root)
+    root.wait_window(userDialog)
