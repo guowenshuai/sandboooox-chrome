@@ -17,5 +17,5 @@ class AppCache(object):
         if not hasattr(AppCache, "_instance"):
             with AppCache._instance_lock:
                 if not hasattr(AppCache, "_instance"):
-                    LocalConfig._instance = object.__new__(cls)  
+                    AppCache._instance = object.__new__(cls, *args, **kwargs)  
         return AppCache._instance

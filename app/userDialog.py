@@ -3,7 +3,7 @@ import tkinter as tk
 # 用户信息
 
 class UserDialog(tk.Toplevel):
-    def __init__(self, line=None):
+    def __init__(self, root, line=None):
         super().__init__()
         self.title('我的信息')
         
@@ -17,6 +17,13 @@ class UserDialog(tk.Toplevel):
 
         # 弹窗界面
         self.setup_UI()
+
+        x = root.winfo_x()
+        y = root.winfo_y()
+        w = root.winfo_width()
+        h = root.winfo_height()  
+        print(x,y,w,h)
+        self.geometry("+%d+%d" % (x + w/3, y + h/3))
     def setup_UI(self):
       # 第一行（两列）
         row1 = tk.Frame(self)

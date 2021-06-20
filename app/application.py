@@ -1,8 +1,10 @@
 import tkinter as tk
-from util import googleAuth
+from util import googleAuth, uiController
 from .table import makeTableCell
-from util import GoogleAuthWatchDog
+from util import GoogleAuthWatchDog, UIController
 from .menu import Menu
+from .header import makeHeader
+
 # ddsasRGbrW1 google-chrome --user-data-dir=/opt/chrome/walkerquan695@gmail.com --proxy-server=socks://45.76.192.110:5158 walkerquan695@gmail.com https://mail.google.com/ https://coinlist.co/ &
 
 data = [
@@ -220,6 +222,7 @@ data = [
 
 class Application(tk.Frame):
     googleAuth_watch_dog = GoogleAuthWatchDog()
+    uiController = UIController()
     def __init__(self, master=None):
         super().__init__(master)
         self.master = master
@@ -227,11 +230,14 @@ class Application(tk.Frame):
         Menu(master)
         self.create_widgets()
         Application.googleAuth_watch_dog.start()
+        Application.uiController.start()
 
     def create_widgets(self):
+        #表头
+        makeHeader(root=self.master)
         # 表格
         frame_canvas = tk.Frame(self.master)
-        frame_canvas.pack(fill=tk.BOTH, expand=1)
+        frame_canvas.pack(side="top", fill=tk.BOTH, expand=1)
 
         group_left = tk.Frame(frame_canvas, bg="#DCDCDC")
         group_left.pack(side="left", fill=tk.BOTH, expand=1)
@@ -252,7 +258,7 @@ class Application(tk.Frame):
         canvas.create_window((0, 0), window=tableFrame, anchor='nw')
 
         for i in range(len(data)):
-            makeTableCell(self.master, tableFrame, data[i], i, Application.googleAuth_watch_dog)
+            makeTableCell(self.master, tableFrame, data[i], i, Application.googleAuth_watch_dog, Application.uiController)
         tableFrame.update_idletasks()
 
         canvas.config(scrollregion=canvas.bbox("all"))

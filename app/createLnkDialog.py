@@ -1,10 +1,13 @@
 import tkinter as tk
 
 class ChromeDialog(tk.Toplevel):
-    def __init__(self, line=None):
+    def __init__(self, root, line=None):
         super().__init__()
         self.title('添加coinlist账号')
-        
+        self.resizable(width=False, height=False)
+        self.positionfrom(who="program")
+        self.attributes("-topmost", True, "-toolwindow", True)
+       
         self.email = tk.StringVar(value = line['email'] if line != None else "")
         self.pass1 = tk.StringVar(value = line['pass1'] if line != None else "")
         self.pass2 = tk.StringVar(value = line['pass2'] if line != None else "")
@@ -15,7 +18,13 @@ class ChromeDialog(tk.Toplevel):
 
         # 弹窗界面
         self.setup_UI()
-  
+        x = root.winfo_x()
+        y = root.winfo_y()
+        w = root.winfo_width()
+        h = root.winfo_height()  
+        print(x,y,w,h)
+        self.geometry("+%d+%d" % (x + w/3, y + h/3))
+
     def setup_UI(self):
         # 第一行（两列）
         row1 = tk.Frame(self)

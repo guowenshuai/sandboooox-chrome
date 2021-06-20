@@ -19,7 +19,7 @@ def Menu(root):
     # coinlistmenu.add_command(label='保存', command=do_job)
     # 分隔线
     coinlistmenu.add_separator()
-    coinlistmenu.add_command(label='导入', command=do_job)
+    coinlistmenu.add_command(label='导入', command=importEmail)
     # coinlistmenu.add_command(label='导出', command=do_job)
 
     # 创建编辑菜单
@@ -45,9 +45,25 @@ def Menu(root):
 
 def do_job():
     print("menu job")
+    
+from tkinter.filedialog import askopenfilename
+import os, json
+def importEmail():
+    filepath = askopenfilename(title='选择账号文件导入', 
+                  initialdir='~', filetypes=[('coinlist账号列表','*.txt')])    
+    if not os.path.exists(filepath):
+        return
+    
+    config = LocalConfig().config
+    existsEmails = set(json.loads(config.get('coinlist', 'email', fallback="[]")))
+    with open(filepath, 'r') as f:
+        for line in f.readlines():
+            existsEmails.add(line.strip())
+    config['coinlist']['email'] = json.dumps(list(existsEmails))
+    LocalConfig().save(config)
 
 def createLnk(root):
-    inputDialog = ChromeDialog()
+    inputDialog = ChromeDialog(root)
     root.wait_window(inputDialog) # 这一句很重要！！！
     # TODO 提交并保存
     print(inputDialog.info)

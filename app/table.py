@@ -1,17 +1,27 @@
 import tkinter as tk
 from util import googleAuth
 from .createLnkDialog import ChromeDialog
+from util import LocalConfig
    
-def makeTableCell(wd, root, line, row, dog):
+def makeTableCell(wd, root, line, row, dog, uicontroller):
+    config = LocalConfig().config
     # email
     email_label = copiedLabel(root, line['email'], weight=2.5)
     email_label.grid(row=row, column=0, padx=5, pady=3, ipadx=1, ipady=1)
     # pass1
-    pass1_label = copiedLabel(root, text=line['pass1'])
+    pass1_txt = line['pass1']
+    if not config['auto'].getboolean('showpass'):
+        pass1_txt = "******"
+    pass1_label = copiedLabel(root, text=pass1_txt)
     pass1_label.grid(row=row, column=1, padx=5, pady=3, ipadx=1, ipady=1)
+    uicontroller.on_entry_created(pass1_label, line['pass1'])
     # pass2
-    pass2_label = copiedLabel(root, text=line['pass2'])
+    pass2_txt = line['pass1']
+    if not config['auto'].getboolean('showpass'):
+        pass2_txt = "******"    
+    pass2_label = copiedLabel(root, text=pass2_txt)
     pass2_label.grid(row=row, column=2, padx=5, pady=3, ipadx=1, ipady=1)
+    uicontroller.on_entry_created(pass2_label, line['pass2'])
     # area
     area_label = copiedLabel(root, text=line['area'])
     area_label.grid(row=row, column=3, padx=5, pady=3, ipadx=1, ipady=1)
@@ -54,7 +64,7 @@ def openChrome(line):
     subprocess.Popen(cmd, cwd=line["user_data_dir"], shell=True,)
 
 def editLine(root, line):
-    inputDialog = ChromeDialog(line=line)
+    inputDialog = ChromeDialog(root, line=line)
     root.wait_window(inputDialog) # 这一句很重要！！！
     # TODO 提交并保存
     print(inputDialog.info)
