@@ -18,6 +18,10 @@ class LocalConfig(object):
             self.__config["coinlist"] = {
                 "email": "[]"
             }
+        if "browser" not in self.__config:
+            self.__config["browser"] = {
+                "exec": ""
+            }
         self.save(self.__config)
             
     @property

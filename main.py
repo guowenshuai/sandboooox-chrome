@@ -1,13 +1,27 @@
 from threading import local
 import tkinter as tk
-import time
-from app import Application
-from util import LocalConfig\
+import time, os
+from app import Application, LoginDialog
+from util import LocalConfig
 
 LocalConfig()
 root = tk.Tk()
 root.geometry("1000x800")
 root.maxsize(1000, 800)
 root.title("sandbooooooox")
-app = Application(master=root)
-app.mainloop()
+root.withdraw()
+
+def run(root):
+
+    app = Application(master=root)
+    app.mainloop()
+
+loginDialog = LoginDialog()
+root.wait_window(loginDialog)
+if loginDialog.success:
+    root.deiconify()
+    run(root)
+else:
+    os._exit(-1)
+
+

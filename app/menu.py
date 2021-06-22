@@ -3,6 +3,8 @@ from tkinter import messagebox
 
 from .createLnkDialog import ChromeDialog
 from .userDialog import UserDialog
+from .priceDialog import PriceDialog
+from .settingsDialog import SettingsDialog
 from util import LocalConfig
 
 def Menu(root):
@@ -27,7 +29,7 @@ def Menu(root):
     menubar.add_cascade(label='我的', menu=privatemenu)
     privatemenu.add_command(label='信息', command=lambda: showUserDialog(root))
     privatemenu.add_separator()
-    privatemenu.add_command(label='设置', command=do_job)
+    privatemenu.add_command(label='设置', command=lambda: showSettingsDialog(root))
     
     # 在‘文件’下拉菜单中创建二级菜单
     # submenu = tk.Menu(coinlistmenu) 
@@ -38,7 +40,7 @@ def Menu(root):
     menubar.add_cascade(label='关于', menu=aboutmenu)
     aboutmenu.add_command(label='团队', command=lambda: aboutTeam(root))
     aboutmenu.add_separator()
-    aboutmenu.add_command(label='价格', command=do_job)
+    aboutmenu.add_command(label='价格', command=lambda: showPriceDialog(root))
     
     root.config(menu=menubar)
     
@@ -66,7 +68,11 @@ def createLnk(root):
     inputDialog = ChromeDialog(root)
     root.wait_window(inputDialog) # 这一句很重要！！！
     # TODO 提交并保存
+    if not inputDialog.info:
+        return
     print(inputDialog.info)
+    if inputDialog.info['email'] != "":
+        print("todo save")
     return inputDialog.info
 
 
@@ -84,3 +90,11 @@ def aboutTeam(root):
 def showUserDialog(root):
     userDialog = UserDialog(root)
     root.wait_window(userDialog)
+
+def showPriceDialog(root):
+    priceDialog = PriceDialog(root)
+    root.wait_window(priceDialog)
+
+def showSettingsDialog(root):
+    settingsDialog = SettingsDialog(root)
+    root.wait_window(settingsDialog)

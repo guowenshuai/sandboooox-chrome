@@ -31,7 +31,7 @@ def makeTableCell(wd, root, line, row, dog, uicontroller):
     dog.on_entry_created(code_label, line['code'])
 
     # 打开浏览器
-    tk.Button(root, text="浏览器", command=lambda: openChrome(line)).grid(row=row, column=5, padx=5, pady=3, ipadx=1, ipady=1)
+    tk.Button(root, text="浏览器", command=lambda: openChrome(config, line)).grid(row=row, column=5, padx=5, pady=3, ipadx=1, ipady=1)
     tk.Button(root, text="复制", command=lambda: copyLine(line)).grid(row=row, column=6, padx=5, pady=3, ipadx=1, ipady=1)
     tk.Button(root, text="编辑", command=lambda: editLine(wd, line)).grid(row=row, column=7, padx=5, pady=3, ipadx=1, ipady=1)
 
@@ -54,12 +54,17 @@ def copyLine(line):
 import os
 import subprocess
 
-def openChrome(line):
+def openChrome(config, line):
     # TODO 检查浏览器执行路径
+    browserExec = config.get("browser", "exec")
+    if not os.access(browserExec, os.X_OK):
+        tk.messagebox.showinfo("警告", '''请设置正确的谷歌浏览器执行路径
+        我的->设置->浏览器''')
+
     # TODO 检查本地存储路径
     print("open chrome %s" % line)
     user_data = os.path.join(line["user_data_dir"], line["email"])
-    cmd = "google-chrome --user-data-dir=%s --proxy-server=socks://%s:%s %s https://mail.google.com/ https://coinlist.co/ &" % (user_data, line["server"], line["port"], line["email"])
+    cmd = "%s --user-data-dir=%s --proxy-server=socks://%s:%s %s https://mail.google.com/ https://coinlist.co/ &" % (browserExec, user_data, line["server"], line["port"], line["email"])
     print(cmd)
     subprocess.Popen(cmd, cwd=line["user_data_dir"], shell=True,)
 

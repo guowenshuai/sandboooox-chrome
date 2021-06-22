@@ -5,9 +5,10 @@ class ChromeDialog(tk.Toplevel):
         super().__init__()
         self.title('添加coinlist账号')
         self.resizable(width=False, height=False)
-        self.positionfrom(who="program")
-        self.attributes("-topmost", True, "-toolwindow", True)
-       
+        # self.positionfrom(who="program")
+        self.attributes("-topmost", True)
+        self.protocol('WM_DELETE_WINDOW', self.cancel)
+
         self.email = tk.StringVar(value = line['email'] if line != None else "")
         self.pass1 = tk.StringVar(value = line['pass1'] if line != None else "")
         self.pass2 = tk.StringVar(value = line['pass2'] if line != None else "")

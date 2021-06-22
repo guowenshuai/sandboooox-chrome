@@ -6,7 +6,8 @@ class UserDialog(tk.Toplevel):
     def __init__(self, root, line=None):
         super().__init__()
         self.title('我的信息')
-        self.attributes("-topmost", True, "-toolwindow", True)
+        self.attributes("-topmost", True)
+        self.resizable(False, False)
 
         self.desc = {
           "uuid": "uuid",
