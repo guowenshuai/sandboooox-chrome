@@ -16,12 +16,14 @@ def run(root):
     app = Application(master=root)
     app.mainloop()
 
-loginDialog = LoginDialog()
-root.wait_window(loginDialog)
-if loginDialog.success:
-    root.deiconify()
-    run(root)
-else:
-    os._exit(-1)
+# loginDialog = LoginDialog()
+# root.wait_window(loginDialog)
+# if loginDialog.success:
+#     root.deiconify()
+#     run(root)
+# else:
+#     os._exit(-1)
 
 
+root.deiconify()
+run(root)

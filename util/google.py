@@ -5,7 +5,14 @@ from apscheduler.schedulers.blocking import BlockingScheduler
 import tkinter as tk
 
 def googleAuth(secret):
-    return otp.get_totp(secret)
+    if secret == "":
+        return 0
+    try:
+        code = otp.get_totp(secret)
+    except Exception as e:
+        return 0
+    else:
+        return code
 
 
 def watch_dog_job(*args):

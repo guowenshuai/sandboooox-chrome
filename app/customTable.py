@@ -28,9 +28,10 @@ dataSource = [
 
 class Tables(tk.Frame):
     def __init__(self, master, columns, dataSource=None, actions=None, deleteFunc=None, editFunc=None):
+        master = tk.Frame(master)
         super().__init__(master)
-        self.__master = master
-        self.pack()
+        self.master = master
+        # self.master.pack()
         self.__columns = columns
         self.__dataSource = dataSource
         self.__actions = actions
@@ -43,7 +44,7 @@ class Tables(tk.Frame):
 
     def create_widgets(self):
         # 创建表格表头和内容
-        row_header = tk.Frame(self.__master)
+        row_header = tk.Frame(self.master)
         for v in self.__columns:
             header_text = v['title']
             tk.Label(row_header, text=header_text, anchor="w", width=int(self.baseWidth*v['weight']),).pack(side=tk.LEFT, padx=1, pady=1)
@@ -52,14 +53,14 @@ class Tables(tk.Frame):
         row_header.pack(side=tk.TOP,  anchor="w",  expand=1, fill=tk.X)
         # 创建行数据
         for dat in self.__dataSource:
-            row = Rows(self.__master, self.__columns, dat, self.__actions, self.__deleteFunc, self.__editFunc)
+            row = Rows(self.master, self.__columns, dat, self.__actions, self.__deleteFunc, self.__editFunc)
             # row.pack(side=tk.TOP,  anchor="w")
             self.__row_list.append(row)
 
     # 表格中追加数据
     def add_data(self, data):
         for dat in data:
-            row = Rows(self.__master, self.__columns, dat, self.__actions, self.__deleteFunc, self.__editFunc)
+            row = Rows(self.master, self.__columns, dat, self.__actions, self.__deleteFunc, self.__editFunc)
             # row.pack(side=tk.TOP,  anchor="w")
             self.__row_list.append(row)
         self.__dataSource.extend(data)
@@ -100,6 +101,8 @@ class Rows(tk.Frame):
                 }
             ent = self.cellLabel(v['index'], v['weight'])
             ent.pack(side=tk.LEFT, padx=1, pady=1)
+            if "slot" in v:
+                v['slot'](ent, cell_text, self.rowDetail[v['index']]['var'])
 
     # 表格按钮
     def create_actions(self):

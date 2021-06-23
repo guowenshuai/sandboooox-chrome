@@ -1,11 +1,12 @@
 import tkinter as tk
 from util import googleAuth, uiController
 from .table import makeTableCell
-from util import GoogleAuthWatchDog, UIController
+from util import GoogleAuthWatchDog, UIController, LocalConfig, Connector
 from .menu import Menu
 from .header import makeHeader
 from .customTable import Tables
 from .deleteDialog import DeleteDialog
+from .coinlist import loadLocalAccounts, saveLocalAccount
 # ddsasRGbrW1 google-chrome --user-data-dir=/opt/chrome/walkerquan695@gmail.com --proxy-server=socks://45.76.192.110:5158 walkerquan695@gmail.com https://mail.google.com/ https://coinlist.co/ &
 
 dataSource = [
@@ -37,344 +38,9 @@ dataSource = [
         "port": "5158",
         "area": "Japan",
         "code": "hgnijq6x7ifpfj5p565xeh5h",
-    },    {
-        "email": "walkerquan695@gmail.com",
-        "user_data_dir": "/opt/chrome/",
-        "pass1": "ddsasRGbrW1",
-        "pass2": "ddsasRGbrW1",
-        "server": "45.76.192.110",
-        "port": "5158",
-        "area": "Japan",
-        "code": "hgnijq6x7ifpfj5p565xeh5h",
-    },
-    {
-        "email": "sheliciawyson68@gmail.com",
-        "user_data_dir": "/opt/chrome/",
-        "pass1": "ddsasRGbrW1",
-        "pass2": "ddsasRGbrW1",
-        "server": "45.76.192.110",
-        "port": "5099",
-        "area": "Singapore",
-        "code": "ccg2aakwt2zsqlkykwqpbfq5",
-    }, {
-        "email": "walkerquan695@gmail.com",
-        "user_data_dir": "/opt/chrome/",
-        "pass1": "ddsasRGbrW1",
-        "pass2": "ddsasRGbrW1",
-        "server": "45.76.192.110",
-        "port": "5158",
-        "area": "Japan",
-        "code": "hgnijq6x7ifpfj5p565xeh5h",
-    },    {
-        "email": "walkerquan695@gmail.com",
-        "user_data_dir": "/opt/chrome/",
-        "pass1": "ddsasRGbrW1",
-        "pass2": "ddsasRGbrW1",
-        "server": "45.76.192.110",
-        "port": "5158",
-        "area": "Japan",
-        "code": "hgnijq6x7ifpfj5p565xeh5h",
-    },
-    {
-        "email": "sheliciawyson68@gmail.com",
-        "user_data_dir": "/opt/chrome/",
-        "pass1": "ddsasRGbrW1",
-        "pass2": "ddsasRGbrW1",
-        "server": "45.76.192.110",
-        "port": "5099",
-        "area": "Singapore",
-        "code": "ccg2aakwt2zsqlkykwqpbfq5",
-    }, {
-        "email": "walkerquan695@gmail.com",
-        "user_data_dir": "/opt/chrome/",
-        "pass1": "ddsasRGbrW1",
-        "pass2": "ddsasRGbrW1",
-        "server": "45.76.192.110",
-        "port": "5158",
-        "area": "Japan",
-        "code": "hgnijq6x7ifpfj5p565xeh5h",
-    },    {
-        "email": "walkerquan695@gmail.com",
-        "user_data_dir": "/opt/chrome/",
-        "pass1": "ddsasRGbrW1",
-        "pass2": "ddsasRGbrW1",
-        "server": "45.76.192.110",
-        "port": "5158",
-        "area": "Japan",
-        "code": "hgnijq6x7ifpfj5p565xeh5h",
-    },
-    {
-        "email": "sheliciawyson68@gmail.com",
-        "user_data_dir": "/opt/chrome/",
-        "pass1": "ddsasRGbrW1",
-        "pass2": "ddsasRGbrW1",
-        "server": "45.76.192.110",
-        "port": "5099",
-        "area": "Singapore",
-        "code": "ccg2aakwt2zsqlkykwqpbfq5",
-    }, {
-        "email": "walkerquan695@gmail.com",
-        "user_data_dir": "/opt/chrome/",
-        "pass1": "ddsasRGbrW1",
-        "pass2": "ddsasRGbrW1",
-        "server": "45.76.192.110",
-        "port": "5158",
-        "area": "Japan",
-        "code": "hgnijq6x7ifpfj5p565xeh5h",
-    },    {
-        "email": "walkerquan695@gmail.com",
-        "user_data_dir": "/opt/chrome/",
-        "pass1": "ddsasRGbrW1",
-        "pass2": "ddsasRGbrW1",
-        "server": "45.76.192.110",
-        "port": "5158",
-        "area": "Japan",
-        "code": "hgnijq6x7ifpfj5p565xeh5h",
-    },
-    {
-        "email": "sheliciawyson68@gmail.com",
-        "user_data_dir": "/opt/chrome/",
-        "pass1": "ddsasRGbrW1",
-        "pass2": "ddsasRGbrW1",
-        "server": "45.76.192.110",
-        "port": "5099",
-        "area": "Singapore",
-        "code": "ccg2aakwt2zsqlkykwqpbfq5",
-    }, {
-        "email": "walkerquan695@gmail.com",
-        "user_data_dir": "/opt/chrome/",
-        "pass1": "ddsasRGbrW1",
-        "pass2": "ddsasRGbrW1",
-        "server": "45.76.192.110",
-        "port": "5158",
-        "area": "Japan",
-        "code": "hgnijq6x7ifpfj5p565xeh5h",
-    },    {
-        "email": "walkerquan695@gmail.com",
-        "user_data_dir": "/opt/chrome/",
-        "pass1": "ddsasRGbrW1",
-        "pass2": "ddsasRGbrW1",
-        "server": "45.76.192.110",
-        "port": "5158",
-        "area": "Japan",
-        "code": "hgnijq6x7ifpfj5p565xeh5h",
-    },
-    {
-        "email": "sheliciawyson68@gmail.com",
-        "user_data_dir": "/opt/chrome/",
-        "pass1": "ddsasRGbrW1",
-        "pass2": "ddsasRGbrW1",
-        "server": "45.76.192.110",
-        "port": "5099",
-        "area": "Singapore",
-        "code": "ccg2aakwt2zsqlkykwqpbfq5",
-    }, {
-        "email": "walkerquan695@gmail.com",
-        "user_data_dir": "/opt/chrome/",
-        "pass1": "ddsasRGbrW1",
-        "pass2": "ddsasRGbrW1",
-        "server": "45.76.192.110",
-        "port": "5158",
-        "area": "Japan",
-        "code": "hgnijq6x7ifpfj5p565xeh5h",
-    },    {
-        "email": "walkerquan695@gmail.com",
-        "user_data_dir": "/opt/chrome/",
-        "pass1": "ddsasRGbrW1",
-        "pass2": "ddsasRGbrW1",
-        "server": "45.76.192.110",
-        "port": "5158",
-        "area": "Japan",
-        "code": "hgnijq6x7ifpfj5p565xeh5h",
-    },
-    {
-        "email": "sheliciawyson68@gmail.com",
-        "user_data_dir": "/opt/chrome/",
-        "pass1": "ddsasRGbrW1",
-        "pass2": "ddsasRGbrW1",
-        "server": "45.76.192.110",
-        "port": "5099",
-        "area": "Singapore",
-        "code": "ccg2aakwt2zsqlkykwqpbfq5",
-    }, {
-        "email": "walkerquan695@gmail.com",
-        "user_data_dir": "/opt/chrome/",
-        "pass1": "ddsasRGbrW1",
-        "pass2": "ddsasRGbrW1",
-        "server": "45.76.192.110",
-        "port": "5158",
-        "area": "Japan",
-        "code": "hgnijq6x7ifpfj5p565xeh5h",
-    },    {
-        "email": "walkerquan695@gmail.com",
-        "user_data_dir": "/opt/chrome/",
-        "pass1": "ddsasRGbrW1",
-        "pass2": "ddsasRGbrW1",
-        "server": "45.76.192.110",
-        "port": "5158",
-        "area": "Japan",
-        "code": "hgnijq6x7ifpfj5p565xeh5h",
-    },
-    {
-        "email": "sheliciawyson68@gmail.com",
-        "user_data_dir": "/opt/chrome/",
-        "pass1": "ddsasRGbrW1",
-        "pass2": "ddsasRGbrW1",
-        "server": "45.76.192.110",
-        "port": "5099",
-        "area": "Singapore",
-        "code": "ccg2aakwt2zsqlkykwqpbfq5",
-    }, {
-        "email": "walkerquan695@gmail.com",
-        "user_data_dir": "/opt/chrome/",
-        "pass1": "ddsasRGbrW1",
-        "pass2": "ddsasRGbrW1",
-        "server": "45.76.192.110",
-        "port": "5158",
-        "area": "Japan",
-        "code": "hgnijq6x7ifpfj5p565xeh5h",
-    },    {
-        "email": "walkerquan695@gmail.com",
-        "user_data_dir": "/opt/chrome/",
-        "pass1": "ddsasRGbrW1",
-        "pass2": "ddsasRGbrW1",
-        "server": "45.76.192.110",
-        "port": "5158",
-        "area": "Japan",
-        "code": "hgnijq6x7ifpfj5p565xeh5h",
-    },
-    {
-        "email": "sheliciawyson68@gmail.com",
-        "user_data_dir": "/opt/chrome/",
-        "pass1": "ddsasRGbrW1",
-        "pass2": "ddsasRGbrW1",
-        "server": "45.76.192.110",
-        "port": "5099",
-        "area": "Singapore",
-        "code": "ccg2aakwt2zsqlkykwqpbfq5",
-    }, {
-        "email": "walkerquan695@gmail.com",
-        "user_data_dir": "/opt/chrome/",
-        "pass1": "ddsasRGbrW1",
-        "pass2": "ddsasRGbrW1",
-        "server": "45.76.192.110",
-        "port": "5158",
-        "area": "Japan",
-        "code": "hgnijq6x7ifpfj5p565xeh5h",
-    },    {
-        "email": "walkerquan695@gmail.com",
-        "user_data_dir": "/opt/chrome/",
-        "pass1": "ddsasRGbrW1",
-        "pass2": "ddsasRGbrW1",
-        "server": "45.76.192.110",
-        "port": "5158",
-        "area": "Japan",
-        "code": "hgnijq6x7ifpfj5p565xeh5h",
-    },
-    {
-        "email": "sheliciawyson68@gmail.com",
-        "user_data_dir": "/opt/chrome/",
-        "pass1": "ddsasRGbrW1",
-        "pass2": "ddsasRGbrW1",
-        "server": "45.76.192.110",
-        "port": "5099",
-        "area": "Singapore",
-        "code": "ccg2aakwt2zsqlkykwqpbfq5",
-    }, {
-        "email": "walkerquan695@gmail.com",
-        "user_data_dir": "/opt/chrome/",
-        "pass1": "ddsasRGbrW1",
-        "pass2": "ddsasRGbrW1",
-        "server": "45.76.192.110",
-        "port": "5158",
-        "area": "Japan",
-        "code": "hgnijq6x7ifpfj5p565xeh5h",
-    },    {
-        "email": "walkerquan695@gmail.com",
-        "user_data_dir": "/opt/chrome/",
-        "pass1": "ddsasRGbrW1",
-        "pass2": "ddsasRGbrW1",
-        "server": "45.76.192.110",
-        "port": "5158",
-        "area": "Japan",
-        "code": "hgnijq6x7ifpfj5p565xeh5h",
-    },
-    {
-        "email": "sheliciawyson68@gmail.com",
-        "user_data_dir": "/opt/chrome/",
-        "pass1": "ddsasRGbrW1",
-        "pass2": "ddsasRGbrW1",
-        "server": "45.76.192.110",
-        "port": "5099",
-        "area": "Singapore",
-        "code": "ccg2aakwt2zsqlkykwqpbfq5",
-    }, {
-        "email": "walkerquan695@gmail.com",
-        "user_data_dir": "/opt/chrome/",
-        "pass1": "ddsasRGbrW1",
-        "pass2": "ddsasRGbrW1",
-        "server": "45.76.192.110",
-        "port": "5158",
-        "area": "Japan",
-        "code": "hgnijq6x7ifpfj5p565xeh5h",
-    },    {
-        "email": "walkerquan695@gmail.com",
-        "user_data_dir": "/opt/chrome/",
-        "pass1": "ddsasRGbrW1",
-        "pass2": "ddsasRGbrW1",
-        "server": "45.76.192.110",
-        "port": "5158",
-        "area": "Japan",
-        "code": "hgnijq6x7ifpfj5p565xeh5h",
-    },
-    {
-        "email": "sheliciawyson68@gmail.com",
-        "user_data_dir": "/opt/chrome/",
-        "pass1": "ddsasRGbrW1",
-        "pass2": "ddsasRGbrW1",
-        "server": "45.76.192.110",
-        "port": "5099",
-        "area": "Singapore",
-        "code": "ccg2aakwt2zsqlkykwqpbfq5",
-    }, {
-        "email": "walkerquan695@gmail.com",
-        "user_data_dir": "/opt/chrome/",
-        "pass1": "ddsasRGbrW1",
-        "pass2": "ddsasRGbrW1",
-        "server": "45.76.192.110",
-        "port": "5158",
-        "area": "Japan",
-        "code": "hgnijq6x7ifpfj5p565xeh5h",
-    },    {
-        "email": "walkerquan695@gmail.com",
-        "user_data_dir": "/opt/chrome/",
-        "pass1": "ddsasRGbrW1",
-        "pass2": "ddsasRGbrW1",
-        "server": "45.76.192.110",
-        "port": "5158",
-        "area": "Japan",
-        "code": "hgnijq6x7ifpfj5p565xeh5h",
-    },
-    {
-        "email": "sheliciawyson68@gmail.com",
-        "user_data_dir": "/opt/chrome/",
-        "pass1": "ddsasRGbrW1",
-        "pass2": "ddsasRGbrW1",
-        "server": "45.76.192.110",
-        "port": "5099",
-        "area": "Singapore",
-        "code": "ccg2aakwt2zsqlkykwqpbfq5",
-    }, {
-        "email": "walkerquan695@gmail.com",
-        "user_data_dir": "/opt/chrome/",
-        "pass1": "ddsasRGbrW1",
-        "pass2": "ddsasRGbrW1",
-        "server": "45.76.192.110",
-        "port": "5158",
-        "area": "Japan",
-        "code": "hgnijq6x7ifpfj5p565xeh5h",
-    },
+    }
 ]
+
 
 class Application(tk.Frame):
     googleAuth_watch_dog = GoogleAuthWatchDog()
@@ -410,50 +76,51 @@ class Application(tk.Frame):
         canvas.configure(yscrollcommand=vsb.set)
         canvas.configure(xscrollcommand=hsb.set)
 
-
         tableFrame = tk.Frame(canvas, bg="#F8F8FF")
 
-        table = Tables(tableFrame, columns=[
-            {
-                "index": "email",
-                "weight": 2,
-                "title": "账号"
-            },     {
-                "index": "pass1",
-                "weight": 1,
-                "title": "coinlist密码",
-                "editable": True,
-            },     {
-                "index": "pass2",
-                "weight": 1,
-                "title": "邮箱密码",
-                "editable": True,
-            },     {
-                "index": "area",
-                "weight": 1,
-                "title": "区域",
-            },     {
-                "index": "code",
-                "weight": 1,
-                "title": "google秘钥",
-                "editable": True,
-            },
-        ], dataSource=dataSource, actions=[
+# 集成账号
+        table1 = Tables(tableFrame, columns=columns_online, dataSource=dataSource, actions=[
             {
                 "text": "浏览器",
                 "command": copyLine,
             },
-
         ], deleteFunc=deleteRow, editFunc=editRow)
-
-
-        # tableFrame = tk.Frame(canvas, bg="#F8F8FF")
+        table1.master.pack()
+# 本地账号
+        table2 = Tables(tableFrame, columns=columns_online, dataSource=loadLocalAccounts(), actions=[
+            {
+                "text": "浏览器",
+                "command": copyLine,
+            },
+        ], deleteFunc=deleteRow, editFunc=editRow)
+        # table2.destory()
         canvas.create_window((0, 0), window=tableFrame, anchor='nw')
-        # for i in range(len(dataSource)):
-            # makeTableCell(self.master, tableFrame, dataSource[i], i, Application.googleAuth_watch_dog, Application.uiController)
         tableFrame.update_idletasks()
 
         canvas.config(scrollregion=canvas.bbox("all"))
+
+# 添加账号槽
+        def add_data(**kwargs):
+            table1.add_data(kwargs['data'])
+        Connector().bind("addAccount", add_data)
+
+        self.current = "online"
+        def change_table():
+            if self.current == "online":
+                table1.master.pack_forget()
+                table2.master.pack()
+                self.current = "local"
+            else:
+                table1.master.pack()
+                table2.master.pack_forget()
+                self.current = "online"
+
+        tk.Button(self.master, text="切换table", command=change_table).pack(side=tk.LEFT)
+
+def loadAccounts():
+    data = []
+    data.extend(loadLocalAccounts())
+    return data
 
 def copyLine(root, line):
     def fun():
@@ -476,3 +143,54 @@ def editRow(line, changed):
     print("保存")
     print(line)
     print(changed)        
+
+
+# 密码加密处理
+def encryptionPass(entry, text, variable):
+    config = LocalConfig().config
+    if config['auto'].getboolean('showpass'):
+        entry.config(show='')
+    else:
+        entry.config(show='*')
+
+    def changeStatus(**kwargs):
+        if kwargs['show']:
+            entry.config(show='')
+        else:
+            entry.config(show='*')
+    Connector().bind("showpass", changeStatus)
+
+def gooleCodeWatch(entry, text, variable):
+    variable.set(googleAuth(text))
+    dog = Application.googleAuth_watch_dog
+    dog.on_entry_created(entry, text)
+
+columns_online = [
+            {
+                "index": "email",
+                "weight": 2,
+                "title": "账号"
+            },     {
+                "index": "pass1",
+                "weight": 1,
+                "title": "coinlist密码",
+                "editable": True,
+                "slot": encryptionPass,
+            },     {
+                "index": "pass2",
+                "weight": 1,
+                "title": "邮箱密码",
+                "editable": True,
+                "slot": encryptionPass,
+            },     {
+                "index": "area",
+                "weight": 1,
+                "title": "区域",
+            },     {
+                "index": "code",
+                "weight": 1,
+                "title": "google秘钥",
+                "editable": True,
+                "slot": gooleCodeWatch,
+            },
+        ]

@@ -20,7 +20,7 @@ class LoginDialog(tk.Toplevel):
         self.labelPwd = tk.Label(self, text='密 码:', justify=tk.RIGHT, width=80)
         self.labelPwd.place(x=10, y=30, width=80, height=20)
         #创建密码文本框
-        self.entryPwd = tk.Entry(self, show='*',width=80, textvariable=self.varPwd)
+        self.entryPwd = tk.Entry(self, show='*' ,width=80, textvariable=self.varPwd)
         self.entryPwd.place(x=100, y=30, width=80, height=20)
         self.buttonOk = tk.Button(self, text='登录', command=self.login)
         self.buttonOk.place(x=30, y=70, width=50, height=20)
@@ -38,6 +38,7 @@ class LoginDialog(tk.Toplevel):
         #创建按钮组件，同时设置按钮事件处理函数   
         self.destroy()
     def cancel(self):
+        self.entryPwd.config(show='')
         self.destroy()
 
         

@@ -5,7 +5,8 @@ from .createLnkDialog import ChromeDialog
 from .userDialog import UserDialog
 from .priceDialog import PriceDialog
 from .settingsDialog import SettingsDialog
-from util import LocalConfig
+from util import LocalConfig, Connector
+from .coinlist import loadLocalAccounts, saveLocalAccount
 
 def Menu(root):
     #　创建一个菜单栏，这里我们可以把它理解成一个容器，在窗口的上方
@@ -73,8 +74,10 @@ def createLnk(root):
     print(inputDialog.info)
     if inputDialog.info['email'] != "":
         print("todo save")
-    return inputDialog.info
+        saveLocalAccount(inputDialog.info)
+        Connector().send("addAccount", data=[inputDialog.info])
 
+    return inputDialog.info
 
 def aboutTeam(root):
     print(LocalConfig().config.sections())

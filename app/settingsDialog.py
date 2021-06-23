@@ -1,5 +1,5 @@
 import tkinter as tk
-from util import LocalConfig
+from util import LocalConfig, Connector
 from tkinter.filedialog import askopenfilename
 
 class SettingsDialog(tk.Toplevel):
@@ -54,6 +54,7 @@ class SettingsDialog(tk.Toplevel):
         if self.showpass.get() == 1:
             config['auto']["showpass"] = "yes"
         LocalConfig().save(config)
+        Connector().send("showpass", show=config['auto'].getboolean('showpass'))
         self.destroy() # 销毁窗口
     def cancel(self):
         self.destroy()

@@ -1,14 +1,14 @@
 import tkinter as tk
-from util import LocalConfig
+from util import LocalConfig, Connector
 import json
 
 def makeHeader(root):
     frame_header = tk.Frame(root)
     frame_header.pack(side="top", fill=tk.X)
     
-    lab_1 = tk.Label(frame_header, text="自建账号:", font=("华文行楷", 14), fg="green")
-    lab_2 = tk.Label(frame_header, text="集成账号:", font=("华文行楷", 14), fg="green")
-    lab_3 = tk.Label(frame_header, text="已导入账号:", font=("华文行楷", 14), fg="green")
+    lab_1 = tk.Label(frame_header, text="自建账号:", font=("华文行楷", 12), fg="red")
+    lab_2 = tk.Label(frame_header, text="集成账号:", font=("华文行楷", 12), fg="green")
+    lab_3 = tk.Label(frame_header, text="已导入:", font=("华文行楷", 12), fg="green")
 
     txt1 = tk.StringVar()
     txt1.set(1)
@@ -20,17 +20,19 @@ def makeHeader(root):
     num_1 = tk.Label(frame_header, textvariable=txt1)
     num_2 = tk.Label(frame_header, textvariable=txt2)
     num_3 = tk.Label(frame_header, textvariable=txt3)
-    lab_1.pack(side="left")
-    num_1.pack(side="left")
+    
     lab_2.pack(side="left")
     num_2.pack(side="left")
     lab_3.pack(side="left")
     num_3.pack(side="left")
+    tk.Button(frame_header, text="同步", command=lambda: syncAccount(txt1, txt2, txt3)).pack(side="left")
+
+    lab_1.pack(side="left")
+    num_1.pack(side="left")
 
     
 
     tk.Button(frame_header, text="显示(隐藏)密码", command=showPass).pack(side="right")
-    tk.Button(frame_header, text="同步账号", command=lambda: syncAccount(txt1, txt2, txt3)).pack(side="left")
 
 def showPass():
     config = LocalConfig().config
@@ -39,6 +41,7 @@ def showPass():
         show = "no"
     config['auto']['showpass'] = show
     LocalConfig().save(config)
+    Connector().send("showpass", show=config['auto'].getboolean('showpass'))
 
 def syncAccount(txt1, txt2, txt3):
     # TODO

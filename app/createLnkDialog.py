@@ -1,4 +1,5 @@
 import tkinter as tk
+from util import googleAuth
 
 class ChromeDialog(tk.Toplevel):
     def __init__(self, root, line=None):
@@ -71,14 +72,23 @@ class ChromeDialog(tk.Toplevel):
         tk.Button(row6, text="取消", command=self.cancel).pack(side=tk.RIGHT)
         tk.Button(row6, text="确定", command=self.ok).pack(side=tk.RIGHT)
     def ok(self):
+        email = self.email.get()
+        if len(email) == 0:
+                tk.messagebox.showinfo("错误", "邮箱必填", parent=self)
+                return
+        secret = self.code.get()
+        if len(secret) > 0:
+            if googleAuth(secret) == 0:
+                tk.messagebox.showinfo("错误", "google秘钥格式错误", parent=self)
+                return
         self.info = {
-            "email": self.email.get(),
+            "email": email,
             "pass1": self.pass1.get(),
             "pass2": self.pass2.get(),
             "server": self.server.get(),
             "port": self.port.get(),
             "area": self.area.get(),
-            "code": self.code.get(),
+            "code": secret,
         }
         self.destroy() # 销毁窗口
     def cancel(self):
