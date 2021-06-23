@@ -19,9 +19,10 @@ def watch_dog_job(*args):
     watch_dog_obj = args[0]
 
     for idx, obj in enumerate(watch_dog_obj.entry_manage_list):
-        txt = tk.StringVar()
-        txt.set(googleAuth(obj['code']))
-        obj['entry'].config(textvariable=txt, relief='flat')
+        # txt = tk.StringVar()
+        # txt.set(googleAuth(obj['code']))
+        # obj['entry'].config(textvariable=txt, relief='flat')
+        obj['display'].set(googleAuth(obj['code'].get()))
 
 class GoogleAuthWatchDog(threading.Thread):
     mutex = threading.Lock()
@@ -36,10 +37,10 @@ class GoogleAuthWatchDog(threading.Thread):
     def run(self):
         self.scheduler.start()
 
-    def on_entry_created(self, entry, code):
+    def on_entry_created(self, displayvar, sourvar):
         self.mutex.acquire()
         self.entry_manage_list.append({
-            "entry": entry,
-            "code": code,
+            "display": displayvar,
+            "code": sourvar,
         })
         self.mutex.release()

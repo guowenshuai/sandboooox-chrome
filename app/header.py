@@ -1,6 +1,8 @@
 import tkinter as tk
 from util import LocalConfig, Connector
 import json
+from api import AppCache
+
 
 def makeHeader(root):
     frame_header = tk.Frame(root)
@@ -30,9 +32,15 @@ def makeHeader(root):
     lab_1.pack(side="left")
     num_1.pack(side="left")
 
-    
-
     tk.Button(frame_header, text="显示(隐藏)密码", command=showPass).pack(side="right")
+
+    def change_table():
+        current = AppCache().config['current']
+        Connector().send("changeTab", current=current)
+        AppCache().config['current'] = not current
+
+    tk.Button(frame_header, text="切换", command=change_table).pack(side=tk.LEFT)
+
 
 def showPass():
     config = LocalConfig().config

@@ -96,13 +96,13 @@ class Rows(tk.Frame):
             if v['index'] in self.rowData:
                 cell_text = self.rowData[v['index']]
                 self.rowDetail[v['index']] = {
-                    "var": tk.StringVar(value=cell_text),
-                    "text": cell_text
+                    "display": tk.StringVar(value=cell_text),
+                    "source": tk.StringVar(value=cell_text),
                 }
             ent = self.cellLabel(v['index'], v['weight'])
             ent.pack(side=tk.LEFT, padx=1, pady=1)
             if "slot" in v:
-                v['slot'](ent, cell_text, self.rowDetail[v['index']]['var'])
+                v['slot'](ent, self.rowDetail[v['index']]["source"], self.rowDetail[v['index']]["display"])
 
     # 表格按钮
     def create_actions(self):
@@ -110,7 +110,7 @@ class Rows(tk.Frame):
             return
         for v in self.actions:
             action_text = v['text']
-            tk.Button(self.master, text=action_text, command=v['command'](self.master, self.rowData)).pack(side=tk.LEFT)
+            tk.Button(self.master, text=action_text, command=v['command'](self.master, self.rowData, self.rowDetail)).pack(side=tk.LEFT)
     
     def edit_actions(self):
         def default_edit():
@@ -130,7 +130,7 @@ class Rows(tk.Frame):
         
     def cellLabel(self, index, weight=1):
         ent = tk.Entry(self.master, state='readonly', readonlybackground='white', fg='black',  width=int(self.baseWidth*weight))
-        ent.config(textvariable=self.rowDetail[index]['var'], relief='flat')
+        ent.config(textvariable=self.rowDetail[index]["display"], relief='flat')
         return ent    
 
     def destory(self):
@@ -145,6 +145,7 @@ class EditRow(tk.Toplevel):
         self.columns = columns
         self.rowData = rowData
         self.rowDetail = rowDetail
+        self.rowEditInfo = {}
         self.editFunc = editFunc
         self.success = False
 
@@ -162,8 +163,12 @@ class EditRow(tk.Toplevel):
             if "editable" in v and v['editable']:
                 row = tk.Frame(self)
                 row.pack(fill="x")
+                cell_text = self.rowDetail[v['index']]["source"].get()
+                self.rowEditInfo[v['index']] = {
+                    "source": tk.StringVar(value=cell_text),
+                }
                 tk.Label(row, text="%s:" % v['title'], width=15, anchor="w").pack(side=tk.LEFT)
-                tk.Entry(row, textvariable=self.rowDetail[v['index']]["var"], width=20).pack(side=tk.LEFT)
+                tk.Entry(row, textvariable=self.rowEditInfo[v['index']]["source"], width=20).pack(side=tk.LEFT)
 
         row_sub = tk.Frame(self)
         row_sub.pack(fill="x")
@@ -174,17 +179,15 @@ class EditRow(tk.Toplevel):
         changed = {}
         for v in self.columns:
             if "editable" in v and v['editable']:
-                val = self.rowDetail[v['index']]["var"].get()
-                if val != self.rowDetail[v['index']]["text"]:
+                val = self.rowEditInfo[v['index']]["source"].get()
+                if val != self.rowDetail[v['index']]["source"].get():
                     changed[v['index']] = val
-                    self.rowDetail[v['index']]["text"] = val
+                    self.rowDetail[v['index']]["display"].set(val)
+                    self.rowDetail[v['index']]["source"].set(val)
         self.success = True
         if self.editFunc:
             self.editFunc(self.rowData, changed)
         self.destroy() 
     def cancel(self):
-        for v in self.columns:
-            if "editable" in v and v['editable']:
-                self.rowDetail[v['index']]["var"].set(self.rowDetail[v['index']]["text"])
         self.success = False
         self.destroy()

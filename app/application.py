@@ -84,7 +84,7 @@ class Application(tk.Frame):
                 "text": "浏览器",
                 "command": copyLine,
             },
-        ], deleteFunc=deleteRow, editFunc=editRow)
+        ], deleteFunc=deleteRow, editFunc=editFunc)
         table1.master.pack()
 # 本地账号
         table2 = Tables(tableFrame, columns=columns_online, dataSource=loadLocalAccounts(), actions=[
@@ -92,7 +92,7 @@ class Application(tk.Frame):
                 "text": "浏览器",
                 "command": copyLine,
             },
-        ], deleteFunc=deleteRow, editFunc=editRow)
+        ], deleteFunc=deleteRow, editFunc=editFunc)
         # table2.destory()
         canvas.create_window((0, 0), window=tableFrame, anchor='nw')
         tableFrame.update_idletasks()
@@ -101,28 +101,27 @@ class Application(tk.Frame):
 
 # 添加账号槽
         def add_data(**kwargs):
-            table1.add_data(kwargs['data'])
+            table2.add_data(kwargs['data'])
         Connector().bind("addAccount", add_data)
 
-        self.current = "online"
-        def change_table():
-            if self.current == "online":
+        def change_table(**kwargs):
+            current = kwargs['current']
+            if current:
                 table1.master.pack_forget()
                 table2.master.pack()
-                self.current = "local"
             else:
                 table1.master.pack()
                 table2.master.pack_forget()
-                self.current = "online"
+        Connector().bind("changeTab", change_table)
 
-        tk.Button(self.master, text="切换table", command=change_table).pack(side=tk.LEFT)
+        # tk.Button(self.master, text="切换table", command=change_table).pack(side=tk.LEFT)
 
 def loadAccounts():
     data = []
     data.extend(loadLocalAccounts())
     return data
 
-def copyLine(root, line):
+def copyLine(root, line, *args):
     def fun():
         r = tk.Tk()
         r.withdraw()
@@ -132,14 +131,14 @@ def copyLine(root, line):
         r.destroy()
     return fun
 
-def deleteRow(root, line):
+def deleteRow(root, line, *args):
     print(line)
     deleteDia = DeleteDialog(root, line, "email")
     root.wait_window(deleteDia)
     if deleteDia.success:
         return True
 
-def editRow(line, changed):
+def editFunc(line, changed, *args):
     print("保存")
     print(line)
     print(changed)        
@@ -160,10 +159,10 @@ def encryptionPass(entry, text, variable):
             entry.config(show='*')
     Connector().bind("showpass", changeStatus)
 
-def gooleCodeWatch(entry, text, variable):
-    variable.set(googleAuth(text))
+def gooleCodeWatch(entry, sourvar, displayvar):
+    displayvar.set(googleAuth(sourvar.get()))
     dog = Application.googleAuth_watch_dog
-    dog.on_entry_created(entry, text)
+    dog.on_entry_created(displayvar, sourvar)
 
 columns_online = [
             {
