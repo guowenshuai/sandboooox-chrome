@@ -120,6 +120,8 @@ class Rows(tk.Frame):
         tk.Button(self.master, text=action_text, command=lambda: default_edit()).pack(side=tk.LEFT)
        
     def remove_actions(self):
+        if not self.deleteFunc:
+            return
         def default_remove():
             if self.deleteFunc:
                 if not self.deleteFunc(self.master, self.rowData):

@@ -22,7 +22,7 @@ class DeleteDialog(tk.Toplevel):
     def setup_UI(self):
         row_tip = tk.Frame(self)
         row_tip.pack(fill="x")
-        tk.Label(row_tip, text='删除账号后,账号将从服务器删除,包含其所有配置').pack(side=tk.TOP)
+        tk.Label(row_tip, text='删除账号后,账号将彻底删除').pack(side=tk.TOP)
         tk.Label(row_tip, text='无法恢复,请输入邮箱确认要删除').pack(side=tk.TOP)
         
         self.confirm = tk.StringVar(value="")

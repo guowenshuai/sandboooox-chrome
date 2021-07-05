@@ -17,7 +17,7 @@ class UserDialog(tk.Toplevel):
           "customNumbers": "自建账号",
           "coinlistNumbers": "集成账号",
         }
-        self.userInfo = AppCache().user
+        self.userInfo = AppCache.user
     
         # 弹窗界面
         self.setup_UI()

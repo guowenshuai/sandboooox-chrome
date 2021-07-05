@@ -1,5 +1,4 @@
 import tkinter as tk
-from api import AppCache
 
 class PriceDialog(tk.Toplevel):
     def __init__(self, root, line=None):

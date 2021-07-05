@@ -1,7 +1,6 @@
 import tkinter as tk
 from util import LocalConfig, Connector
 import json
-from api import AppCache
 
 
 def makeHeader(root):
@@ -23,25 +22,37 @@ def makeHeader(root):
     num_2 = tk.Label(frame_header, textvariable=txt2)
     num_3 = tk.Label(frame_header, textvariable=txt3)
     
+    iv_default = tk.IntVar()
+    def change_table():
+        current = 2
+        if iv_default.get() == 1:
+            current = 1
+        Connector().send("changeTab", current=current)
+
+    rb_default1 = tk.Radiobutton(frame_header, text='集成账号', value=1, variable=iv_default, command=change_table)
+    rb_default2 = tk.Radiobutton(frame_header, text='自建账号', value=2, variable=iv_default, command=change_table)
+    iv_default.set(1)
+
+
+    rb_default1.pack(side=tk.LEFT)
     lab_2.pack(side="left")
     num_2.pack(side="left")
     lab_3.pack(side="left")
     num_3.pack(side="left")
     tk.Button(frame_header, text="同步", command=lambda: syncAccount(txt1, txt2, txt3)).pack(side="left")
 
+    rb_default2.pack(side=tk.LEFT)
     lab_1.pack(side="left")
     num_1.pack(side="left")
 
-    tk.Button(frame_header, text="显示(隐藏)密码", command=showPass).pack(side="right")
+    tk.Button(frame_header, text="显示(隐藏)密码", command=showPass).pack(side="right", padx=10)
+    
+    tk.Button(frame_header, text="测试", command=test).pack(side="right")
 
-    def change_table():
-        current = AppCache().config['current']
-        Connector().send("changeTab", current=current)
-        AppCache().config['current'] = not current
-
-    tk.Button(frame_header, text="切换", command=change_table).pack(side=tk.LEFT)
-
-
+from util import detect_port
+def test():
+    detect_port("127.0.0.1", 9999)
+    pass
 def showPass():
     config = LocalConfig().config
     show = "yes"

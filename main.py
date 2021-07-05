@@ -6,6 +6,8 @@ from util import LocalConfig
 
 LocalConfig()
 root = tk.Tk()
+icon = tk.PhotoImage(file="icon.gif")
+root.tk.call('wm', 'iconphoto', root._w, icon)
 root.geometry("1000x800")
 root.maxsize(1000, 800)
 root.title("sandbooooooox")

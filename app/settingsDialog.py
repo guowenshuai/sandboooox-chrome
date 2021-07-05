@@ -1,6 +1,6 @@
 import tkinter as tk
 from util import LocalConfig, Connector
-from tkinter.filedialog import askopenfilename
+from tkinter.filedialog import askopenfilename, askdirectory
 
 class SettingsDialog(tk.Toplevel):
     def __init__(self, root, line=None):
@@ -13,6 +13,7 @@ class SettingsDialog(tk.Toplevel):
        
     #   设置浏览器
         self.exec = tk.StringVar(value=config.get("browser", "exec"))
+        self.cacheDir = tk.StringVar(value=config.get("browser", "cache", fallback=""))
         self.showpass = tk.IntVar()
         if config['auto'].getboolean('showpass'):
             self.showpass.set(1)
@@ -31,25 +32,36 @@ class SettingsDialog(tk.Toplevel):
         # 第一行（两列）
         row1 = tk.Frame(self)
         row1.pack(fill="x")
-        tk.Label(row1, text='浏览器:', width=10, anchor="w").pack(side=tk.LEFT)
+        tk.Label(row1, text='浏览器:', width=15, anchor="w").pack(side=tk.LEFT)
         tk.Entry(row1, textvariable=self.exec, width=20).pack(side=tk.LEFT)
         tk.Button(row1, text="选择", command=lambda: self.selectFile()).pack(side=tk.LEFT)
         # 第二行
         row2 = tk.Frame(self)
         row2.pack(fill="x", ipadx=1, ipady=1)
-        tk.Label(row2, text='显示密码:', width=10, anchor="w").pack(side=tk.LEFT)
+        tk.Label(row2, text='显示密码:', width=15, anchor="w").pack(side=tk.LEFT)
         tk.Checkbutton(row2, variable=self.showpass, width=30, anchor="w").pack(side=tk.RIGHT)
+
+        row3 = tk.Frame(self)
+        row3.pack(fill="x")
+        tk.Label(row3, text='存储(10G以上):', width=15, anchor="w").pack(side=tk.LEFT)
+        tk.Entry(row3, textvariable=self.cacheDir, width=20).pack(side=tk.LEFT)
+        tk.Button(row3, text="选择", command=lambda: self.selectDir()).pack(side=tk.LEFT)
        
         row6 = tk.Frame(self)
-        row6.pack(fill="x")
+        row6.pack(fill="x", )
         tk.Button(row6, text="取消", command=self.cancel).pack(side=tk.RIGHT)
         tk.Button(row6, text="确定", command=self.ok).pack(side=tk.RIGHT)
+
     def selectFile(self):
         filename = askopenfilename(parent=self, title='选择谷歌浏览器',  initialdir='~')    
         self.exec.set(filename)
+    def selectDir(self):
+        directory = askdirectory(parent=self, title='选择存储目录(10G以上空间)',  initialdir='~')
+        self.cacheDir.set(directory)
     def ok(self):
         config = LocalConfig().config
         config['browser']['exec'] = self.exec.get()
+        config['browser']['cache'] = self.cacheDir.get()
         config['auto']["showpass"] = "no"
         if self.showpass.get() == 1:
             config['auto']["showpass"] = "yes"

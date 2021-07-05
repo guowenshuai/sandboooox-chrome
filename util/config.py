@@ -7,7 +7,7 @@ configPath = os.path.join(userHome, ".sandbooox-chrome.ini")
 class LocalConfig(object):
     _instance_lock = threading.Lock()
 
-    def __init__(self):
+    def init__(self):
         self.__config = configparser.ConfigParser()
         self.__config.read(configPath)
         if "auto" not in self.__config:
@@ -38,4 +38,6 @@ class LocalConfig(object):
             with LocalConfig._instance_lock:
                 if not hasattr(LocalConfig, "_instance"):
                     LocalConfig._instance = object.__new__(cls, *args, **kwargs)  
+                    LocalConfig._instance.init__()
+
         return LocalConfig._instance

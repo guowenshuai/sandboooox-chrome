@@ -1,18 +1,20 @@
 import tkinter as tk
 from util import googleAuth, uiController
-from .table import makeTableCell
 from util import GoogleAuthWatchDog, UIController, LocalConfig, Connector
 from .menu import Menu
 from .header import makeHeader
 from .customTable import Tables
 from .deleteDialog import DeleteDialog
 from .coinlist import loadLocalAccounts, saveLocalAccount
+from .announcement import Announcement
+import json
+from api import API
+
 # ddsasRGbrW1 google-chrome --user-data-dir=/opt/chrome/walkerquan695@gmail.com --proxy-server=socks://45.76.192.110:5158 walkerquan695@gmail.com https://mail.google.com/ https://coinlist.co/ &
 
 dataSource = [
     {
         "email": "walkerquan695@gmail.com",
-        "user_data_dir": "/opt/chrome/",
         "pass1": "ddsasRGbrW1",
         "pass2": "ddsasRGbrW1",
         "server": "45.76.192.110",
@@ -55,10 +57,20 @@ class Application(tk.Frame):
         Application.uiController.start()
 
     def create_widgets(self):
-        #表头
+        # 头部工具
         makeHeader(root=self.master)
-        # 表格
-        frame_canvas = tk.Frame(self.master)
+        # 内容
+        content = tk.Frame(self.master)
+        content.pack(side=tk.TOP, fill=tk.BOTH, expand=1)
+        # 底部
+        bottom = tk.Frame(self.master)
+        bottom.pack(side=tk.BOTTOM, fill=tk.X)
+        
+        # 公告
+        Announcement(bottom)
+
+        # 内容
+        frame_canvas = tk.Frame(content)
         frame_canvas.pack(side="top", fill=tk.BOTH, expand=1)
 
         group_left = tk.Frame(frame_canvas, bg="#DCDCDC")
@@ -79,21 +91,23 @@ class Application(tk.Frame):
         tableFrame = tk.Frame(canvas, bg="#F8F8FF")
 
 # 集成账号
-        table1 = Tables(tableFrame, columns=columns_online, dataSource=dataSource, actions=[
+        self.table1 = Tables(tableFrame, columns=columns_online, dataSource=dataSource, actions=[
             {
                 "text": "浏览器",
                 "command": copyLine,
+            }, {
+                "text": "移除",
+                "command": removeEmail,
             },
         ], deleteFunc=deleteRow, editFunc=editFunc)
-        table1.master.pack()
+        self.table1.master.pack()
 # 本地账号
-        table2 = Tables(tableFrame, columns=columns_online, dataSource=loadLocalAccounts(), actions=[
+        self.table2 = Tables(tableFrame, columns=columns_local, dataSource=loadLocalAccounts(), actions=[
             {
                 "text": "浏览器",
                 "command": copyLine,
             },
         ], deleteFunc=deleteRow, editFunc=editFunc)
-        # table2.destory()
         canvas.create_window((0, 0), window=tableFrame, anchor='nw')
         tableFrame.update_idletasks()
 
@@ -101,20 +115,42 @@ class Application(tk.Frame):
 
 # 添加账号槽
         def add_data(**kwargs):
-            table2.add_data(kwargs['data'])
+            self.table2.add_data(kwargs['data'])
         Connector().bind("addAccount", add_data)
 
         def change_table(**kwargs):
             current = kwargs['current']
-            if current:
-                table1.master.pack_forget()
-                table2.master.pack()
+            if current == 2:
+                self.table1.master.pack_forget()
+                self.table2.master.pack()
             else:
-                table1.master.pack()
-                table2.master.pack_forget()
+                self.table1.master.pack()
+                self.table2.master.pack_forget()
         Connector().bind("changeTab", change_table)
 
-        # tk.Button(self.master, text="切换table", command=change_table).pack(side=tk.LEFT)
+    def init_data(self):
+        # 获取集成账号
+        config = LocalConfig().config
+        existsEmails = set(json.loads(config.get('coinlist', 'email', fallback="[]")))
+        API.syncCoinlistAccount(existsEmails)
+        #  TODO
+        pass
+
+# 从本机移除集成邮箱账号,不再同步
+def removeEmail(root, line, *args):
+    def func():
+        result = tk.messagebox.askokcancel(title = "移除",message="移除后,本设备不会再同步该账号 %s" % line['email'])
+        if result:
+            root.destroy()
+            config = LocalConfig().config
+            existsEmails = set(json.loads(config.get('coinlist', 'email', fallback="[]")))
+            if line['email'] in existsEmails:
+                existsEmails.remove(line['email'])
+            config['coinlist']['email'] = json.dumps(list(existsEmails))
+            LocalConfig().save(config)
+            
+
+    return func
 
 def loadAccounts():
     data = []
@@ -167,28 +203,69 @@ def gooleCodeWatch(entry, sourvar, displayvar):
 columns_online = [
             {
                 "index": "email",
-                "weight": 2,
+                "weight": 1.5,
                 "title": "账号"
             },     {
                 "index": "pass1",
-                "weight": 1,
+                "weight": 0.8,
                 "title": "coinlist密码",
                 "editable": True,
                 "slot": encryptionPass,
             },     {
                 "index": "pass2",
-                "weight": 1,
+                "weight": 0.8,
                 "title": "邮箱密码",
                 "editable": True,
                 "slot": encryptionPass,
             },     {
                 "index": "area",
-                "weight": 1,
+                "weight": 0.6,
                 "title": "区域",
             },     {
                 "index": "code",
-                "weight": 1,
-                "title": "google秘钥",
+                "weight": 0.6,
+                "title": "秘钥",
+                "editable": True,
+                "slot": gooleCodeWatch,
+            },
+        ]
+
+columns_local = [
+            {
+                "index": "email",
+                "weight": 1.5,
+                "title": "账号"
+            },     {
+                "index": "pass1",
+                "weight": 0.8,
+                "title": "coinlist密码",
+                "editable": True,
+                "slot": encryptionPass,
+            },     {
+                "index": "pass2",
+                "weight": 0.8,
+                "title": "邮箱密码",
+                "editable": True,
+                "slot": encryptionPass,
+            },     {
+                "index": "area",
+                "weight": 0.6,
+                "title": "区域",
+                "editable": True,
+            },     {
+                "index": "server",
+                "weight": 0.8,
+                "title": "服务器",
+                "editable": True,
+            },     {
+                "index": "port",
+                "weight": 0.4,
+                "title": "端口",
+                "editable": True,
+            },     {
+                "index": "code",
+                "weight": 0.6,
+                "title": "秘钥",
                 "editable": True,
                 "slot": gooleCodeWatch,
             },

@@ -6,24 +6,24 @@ from .userDialog import UserDialog
 from .priceDialog import PriceDialog
 from .settingsDialog import SettingsDialog
 from util import LocalConfig, Connector
-from .coinlist import loadLocalAccounts, saveLocalAccount
+from .coinlist import loadLocalAccounts, saveLocalAccount, exportLocalAccount, importLocalAccount
+from .editEmailDialog import EditEmailDialog
 
 def Menu(root):
     #　创建一个菜单栏，这里我们可以把它理解成一个容器，在窗口的上方
     menubar = tk.Menu(root)
-    #　定义一个空的菜单单元
     coinlistmenu = tk.Menu(menubar, tearoff=0)  # tearoff意为下拉
-    #　将上面定义的空菜单命名为`File`，放在菜单栏中，就是装入那个容器中
     menubar.add_cascade(label='coinlist', menu=coinlistmenu)
-    #　在`文件`中加入`新建`的小菜单，即我们平时看到的下拉菜单，每一个小菜单对应命令操作。
-    #　如果点击这些单元, 就会触发`do_job`的功能
-    coinlistmenu.add_command(label='新建', command=lambda: createLnk(root))
-    # coinlistmenu.add_command(label='打开', command=do_job)
-    # coinlistmenu.add_command(label='保存', command=do_job)
+   
     # 分隔线
+    coinlistmenu.add_command(label='导入邮箱', command=importEmail)
     coinlistmenu.add_separator()
-    coinlistmenu.add_command(label='导入', command=importEmail)
-    # coinlistmenu.add_command(label='导出', command=do_job)
+
+    submenu = tk.Menu(coinlistmenu) 
+    coinlistmenu.add_cascade(label='本地', menu=submenu)
+    submenu.add_command(label='新建', command=lambda: createLnk(root))
+    submenu.add_command(label='导出到剪贴板', command=exportClipboard)
+    submenu.add_command(label='从剪贴板导入', command=importClipboard)
 
     # 创建编辑菜单
     privatemenu = tk.Menu(menubar, tearoff=0)
@@ -32,11 +32,6 @@ def Menu(root):
     privatemenu.add_separator()
     privatemenu.add_command(label='设置', command=lambda: showSettingsDialog(root))
     
-    # 在‘文件’下拉菜单中创建二级菜单
-    # submenu = tk.Menu(coinlistmenu) 
-    # coinlistmenu.add_cascade(label='导入', menu=submenu, underline=0)
-    # submenu.add_command(label='导入图片', command=do_job)
-
     aboutmenu = tk.Menu(menubar, tearoff=0)
     menubar.add_cascade(label='关于', menu=aboutmenu)
     aboutmenu.add_command(label='团队', command=lambda: aboutTeam(root))
@@ -50,20 +45,49 @@ def do_job():
     print("menu job")
     
 from tkinter.filedialog import askopenfilename
-import os, json
+import os, json, re
 def importEmail():
     filepath = askopenfilename(title='选择账号文件导入', 
-                  initialdir='~', filetypes=[('coinlist账号列表','*.txt')])    
+                  initialdir='~', filetypes=[('coinlist账号列表','*.txt')])
+    if len(filepath) == 0:
+        return
     if not os.path.exists(filepath):
         return
+    EMAIL_REGEX = re.compile(r"[^@]+@[^@]+\.[^@]+")
     
     config = LocalConfig().config
     existsEmails = set(json.loads(config.get('coinlist', 'email', fallback="[]")))
     with open(filepath, 'r') as f:
         for line in f.readlines():
-            existsEmails.add(line.strip())
+            line = line.strip()
+            if EMAIL_REGEX.match(line):
+                existsEmails.add(line)
     config['coinlist']['email'] = json.dumps(list(existsEmails))
     LocalConfig().save(config)
+
+def exportClipboard():
+    line = exportLocalAccount()
+    r = tk.Tk()
+    r.withdraw()
+    r.clipboard_clear()
+    r.clipboard_append(line)
+    r.update() # now it stays on the clipboard after the window is closed
+    r.destroy()
+
+def importClipboard():
+    r = tk.Tk()
+    r.withdraw()
+    line = r.clipboard_get()
+    r.update()
+    r.destroy()
+    if importLocalAccount(line.strip()):
+        tk.messagebox.showinfo("导入成功", "导入成功")
+    else:
+        tk.messagebox.showinfo("导入失败", "从剪贴板导入失败,数据格式错误")
+        
+def editEmail(root):
+    dia = EditEmailDialog(root)
+    root.wait_window(dia)
 
 def createLnk(root):
     inputDialog = ChromeDialog(root)
@@ -80,7 +104,6 @@ def createLnk(root):
     return inputDialog.info
 
 def aboutTeam(root):
-    print(LocalConfig().config.sections())
     msg = '''  心之所向,身之所往
 
     coinlist账号
@@ -89,6 +112,7 @@ def aboutTeam(root):
     全方位的服务
     '''
     tk.messagebox.showinfo("关于团队", msg)
+
 
 def showUserDialog(root):
     userDialog = UserDialog(root)
